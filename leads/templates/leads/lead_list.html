@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+    <h1 class="text-4xl text-gray-800">Leads</h1>
+    <a class="text-gray-500 hover:text-blue-500" href="{% url 'leads:category-list' %}">
+        View categories
+    </a>
+</div>
+
+<div>
+    {% if request.user.is_organisor %}
+    <div>
+        <a class="text-gray-500 hover:text-blue-500" href="{% url 'leads:lead-create' %}">
+            Create a new lead
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    First Name
+                </th>
+                <th>
+                    Last Name
+                </th>
+                <th>
+                    Age
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Cell Phone Number
+                </th>
+                <th>
+                    Category
+                </th>
+                <th>
+                    <span class="sr-only">Edit</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lead in leads %}
+            <tr>
+                <td>
+                    <a href="{% url 'leads:lead-detail' lead.pk %}">{{ lead.first_name }}</a>
+                </td>
+                <td>
+                    {{ lead.last_name }}
+                </td>
+                <td>
+                    {{ lead.age }}
+                </td>
+                <td>
+                    {{ lead.email }}
+                </td>
+                <td>
+                    {{ lead.phone_number }}
+                </td>
+                <td>
+                    {% if lead.category %}
+                    <span>
+                        {{ lead.category.name }}
+                    </span>
+                    {% else %}
+                    <span>
+                        Unassigned
+                    </span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'leads:lead-update' lead.pk %}">
+                        Edit
+                    </a>
+                </td>
+            </tr>
+
+            {% empty %}
+            <tr>
+                <td colspan="6">There are currently no leads</td>
+            </tr>
+
+            {% endfor %}
+        </tbody>
+    </table>
+
+
+{% if unassigned_leads.exists %}
+<div class="row">
+    <h1 class="text-4xl text-gray-800">Unassigned leads</h1>
+</div>
+{% for lead in unassigned_leads %}
+    <h2>
+        {{ lead.first_name }} {{ lead.last_name }}
+    </h2>
+    <p>
+        {{ lead.description }}
+    </p>
+    <a href="{% url 'leads:assign-agent' lead.pk %}">
+        Assign an agent
+    </a>
+{% endfor %}
+{% endif %}
+
+
+</div>
+{% endblock content %}

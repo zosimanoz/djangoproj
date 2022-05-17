@@ -1,0 +1,41 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      {% if not request.user.is_authenticated %}
+      <li class="nav-item">
+        <a href="{% url 'signup' %}" class="nav-link">Signup</a>
+      </li>
+      {% else %}
+        {% if request.user.is_organisor %}
+        <li class="nav-item">
+          <a href="{% url 'agents:agent-list' %}" class="nav-link">Agents</a>
+        </li>
+        {% endif %}
+        <li class="nav-item">
+          <a href="{% url 'leads:lead-list' %}" class="nav-link">Leads</a>
+        </li>
+      {% endif %}
+
+
+      {% if request.user.is_authenticated %}
+      <li class="nav-item">
+        <a href="{% url 'logout' %}" class="nav-link">
+          Logout: {{ request.user.username }}
+        </a>
+      </li>
+      {% else %}
+      <li class="nav-item">
+        <a href="{% url 'login' %}" class="nav-link">
+          Login
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
